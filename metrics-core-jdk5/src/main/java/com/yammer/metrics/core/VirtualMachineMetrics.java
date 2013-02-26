@@ -416,7 +416,7 @@ public class VirtualMachineMetrics {
                         t.getLockOwnerName(),
                         t.getClass().getName());
             } else if (t.getThreadState() == Thread.State.BLOCKED) {
-                writer.printf("\n    - waiting to lock <0x%08x> (lock name %s) (lock owner %s) (class %s)",
+                writer.printf("\n    - waiting to lock (lock name %s) (lock owner %s) (class %s)",
                 		t.getLockName(),
                         t.getLockOwnerName(),
                         t.getClass().getName());
