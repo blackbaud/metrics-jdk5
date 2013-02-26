@@ -19,18 +19,10 @@
 	<modules>
 		<module>metrics-annotation-jdk5</module>
 		<module>metrics-core-jdk5</module>
-		<module>metrics-ehcache-jdk5</module>
-		<module>metrics-ganglia-jdk5</module>
 		<module>metrics-graphite-jdk5</module>
-		<module>metrics-guice-jdk5</module>
 		<module>metrics-httpclient-jdk5</module>
-		<module>metrics-jdbi-jdk5</module>
-		<module>metrics-jersey-jdk5</module>
-		<module>metrics-jetty-jdk5</module>
 		<module>metrics-log4j-jdk5</module>
 		<module>metrics-logback-jdk5</module>
-		<module>metrics-scala_2.9.1-jdk5</module>
-		<module>metrics-servlet-jdk5</module>
 		<module>metrics-spring-jdk5</module>
 		<module>metrics-web-jdk5</module>
 	</modules>
