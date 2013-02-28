@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.yammer.metrics</groupId>
+            <groupId>com.blackbaud.thirdparty.com.yammer.metrics</groupId>
             <artifactId>metrics-core</artifactId>
             <version>${project.version}</version>
         </dependency>
