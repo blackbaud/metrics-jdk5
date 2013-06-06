@@ -1,15 +1,22 @@
-package com.yammer.metrics.reporting;
-
-import com.yammer.metrics.core.Clock;
-import com.yammer.metrics.core.MetricPredicate;
-import com.yammer.metrics.core.MetricsRegistry;
-import com.yammer.metrics.reporting.tests.AbstractPollingReporterTest;
-
-import java.io.OutputStream;
-import java.net.Socket;
+package com.yammer.metrics.reporting.tests;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.Random;
+import java.util.concurrent.Callable;
+
+import org.junit.Test;
+
+import com.yammer.metrics.core.Clock;
+import com.yammer.metrics.core.Counter;
+import com.yammer.metrics.core.MetricPredicate;
+import com.yammer.metrics.core.MetricsRegistry;
+import com.yammer.metrics.reporting.AbstractPollingReporter;
+import com.yammer.metrics.reporting.GraphiteReporter;
+import com.yammer.metrics.reporting.SocketProvider;
 
 public class GraphiteReporterTest extends AbstractPollingReporterTest {
     @Override
@@ -85,7 +92,9 @@ public class GraphiteReporterTest extends AbstractPollingReporterTest {
     @Override
     public String[] expectedCounterResult(long count) {
         return new String[]{
-                String.format("prefix.java.lang.Object.metric.count %d 5", count)
+              String.format("prefix.java.lang.Object.metric.count %d 5", count),
+              String.format("prefix.java.lang.Object.metric.intervalCount %d 5", count)
         };
     }
+    
 }

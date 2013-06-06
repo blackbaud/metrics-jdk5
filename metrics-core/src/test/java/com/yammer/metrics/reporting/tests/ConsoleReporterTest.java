@@ -33,7 +33,8 @@ public class ConsoleReporterTest extends AbstractPollingReporterTest {
                 "1/1/70 12:00:05 AM =============================================================",
                 "java.lang.Object:",
                 "metric:",
-                "count = " + count
+                "count = " + count,
+                "intervalCount = " + count
         };
     }
 

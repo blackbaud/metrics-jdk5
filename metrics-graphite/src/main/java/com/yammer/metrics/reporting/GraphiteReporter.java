@@ -13,7 +13,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.Thread.State;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -304,9 +306,32 @@ public class GraphiteReporter extends AbstractPollingReporter implements MetricP
         sendObjToGraphite(epoch, sanitizeName(name), "value", gauge.value());
     }
 
-    
+    // There could be multiple reporters.  Each Reporter instance should be
+    // kept alive as long as it is reporting data, so a private Map makes the most sense.
+    private Map<MetricName, Long> lastCountMap = new HashMap<MetricName, Long>();
     public void processCounter(MetricName name, Counter counter, Long epoch) throws IOException {
-        sendInt(epoch, sanitizeName(name), "count", counter.count());
+      
+      // load previous value from the Map
+      Long previousValObj = lastCountMap.get(name);
+      long previousVal = 0;
+      if (previousValObj != null) {
+        previousVal = previousValObj.longValue();
+      }
+
+      long currentCount = counter.count();
+      lastCountMap.put(name, currentCount);
+
+      long intervalCount = 0;
+      
+      // It's possible to decrement a counter, so negative values are valid.
+      // If the jvm is restarted, the counter and reporter will restart together, so we
+      // don't need to account for "resets"
+      // TODO: When the previous value is not known, should we report 0 or the current counter value?
+      intervalCount = currentCount - previousVal;
+
+      sendInt(epoch, sanitizeName(name), "count", currentCount);
+      sendInt(epoch, sanitizeName(name), "intervalCount", intervalCount);
+
     }
 
     

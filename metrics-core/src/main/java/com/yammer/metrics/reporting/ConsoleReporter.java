@@ -8,7 +8,9 @@ import com.yammer.metrics.core.MetricPredicate;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -157,8 +159,29 @@ public class ConsoleReporter extends AbstractPollingReporter implements
     }
 
     
+    // There could be multiple reporters.  Each Reporter instance should be
+    // kept alive as long as it is reporting data, so a private Map makes the most sense.
+    private Map<MetricName, Long> lastCountMap = new HashMap<MetricName, Long>();
     public void processCounter(MetricName name, Counter counter, PrintStream stream) {
-        stream.printf(locale, "    count = %d\n", counter.count());
+      // load previous value from the Map
+      Long previousValObj = lastCountMap.get(name);
+      long previousVal = 0;
+      if (previousValObj != null) {
+        previousVal = previousValObj.longValue();
+      }
+
+      long currentCount = counter.count();
+      lastCountMap.put(name, currentCount);
+
+      long intervalCount = 0;
+      
+      // It's possible to decrement a counter, so negative values are valid.
+      // If the jvm is restarted, the counter and reporter will restart together, so we
+      // don't need to account for "resets"
+      intervalCount = currentCount - previousVal;
+
+      stream.printf(locale, "            count = %d\n", currentCount);
+      stream.printf(locale, "    intervalCount = %d\n", intervalCount);
     }
 
     
